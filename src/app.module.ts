@@ -17,7 +17,7 @@ import { CommonsModule } from './commons/commons.module';
       password: process.env.DB_PASSWORD || '',
       database: process.env.DB_DATABASE || 'products_ionic',
       entities: [__dirname + '/entity/*.entity{.ts,.js}'],
-      synchronize: true,
+      //synchronize: true,
     }),
     TypeOrmModule.forFeature([Product]),
     ProductsModule,

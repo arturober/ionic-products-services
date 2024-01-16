@@ -1,4 +1,4 @@
-FROM node:current-alpine
+FROM node:20-alpine
 WORKDIR /ionic-products-services
 COPY package*.json ./
 RUN npm install 
