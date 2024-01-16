@@ -1,0 +1,11 @@
+{
+    "type": "mysql",
+    "host": "arturober.com",
+    "port": 3306,
+    "username": "example",
+    "password": "example",
+    "database": "products_ionic",
+    "entities": ["src/entity/**.entity{.ts,.js}"],
+    "synchronize": true,
+    "logging": false
+ }
