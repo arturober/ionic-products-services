@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 16-01-2024 a las 23:04:08
+-- Tiempo de generación: 16-01-2024 a las 23:29:44
 -- Versión del servidor: 10.1.48-MariaDB-0+deb9u2
 -- Versión de PHP: 7.0.33-0+deb9u12
 
@@ -11,10 +11,10 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 --
--- Base de datos: `ionic_products`
+-- Base de datos: `products_ionic`
 --
-CREATE DATABASE IF NOT EXISTS `ionic_products` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `ionic_products`;
+CREATE DATABASE IF NOT EXISTS `products_ionic` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `products_ionic`;
 
 -- --------------------------------------------------------
 
@@ -25,9 +25,10 @@ USE `ionic_products`;
 DROP TABLE IF EXISTS `comment`;
 CREATE TABLE `comment` (
   `id` int(10) UNSIGNED NOT NULL,
-  `idUser` int(10) UNSIGNED NOT NULL,
-  `idProduct` int(10) UNSIGNED NOT NULL,
-  `comment` varchar(1000) NOT NULL
+  `text` varchar(1000) NOT NULL,
+  `date` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+  `productId` int(10) UNSIGNED NOT NULL,
+  `userId` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -40,11 +41,11 @@ DROP TABLE IF EXISTS `product`;
 CREATE TABLE `product` (
   `id` int(10) UNSIGNED NOT NULL,
   `description` varchar(200) NOT NULL,
-  `price` double NOT NULL,
-  `available` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `imageUrl` varchar(200) NOT NULL,
-  `rating` double NOT NULL,
-  `idUser` int(10) UNSIGNED NOT NULL
+  `rating` smallint(6) NOT NULL DEFAULT '0',
+  `price` decimal(8,2) NOT NULL,
+  `available` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `creatorId` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -56,10 +57,11 @@ CREATE TABLE `product` (
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` int(10) UNSIGNED NOT NULL,
-  `name` varchar(250) NOT NULL,
-  `email` varchar(250) NOT NULL,
-  `password` varchar(100) NOT NULL,
-  `avatar` varchar(250) NOT NULL
+  `name` varchar(150) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `password` varchar(150) DEFAULT NULL,
+  `avatar` varchar(100) NOT NULL DEFAULT 'img/profile.jpg',
+  `firebaseToken` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -70,23 +72,23 @@ CREATE TABLE `user` (
 -- Indices de la tabla `comment`
 --
 ALTER TABLE `comment`
-  ADD PRIMARY KEY (`id`) USING BTREE,
-  ADD KEY `idProduct` (`idProduct`),
-  ADD KEY `idUser` (`idUser`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FK_1e9f24a68bd2dcd6390a4008395` (`productId`),
+  ADD KEY `FK_c0354a9a009d3bb45a08655ce3b` (`userId`);
 
 --
 -- Indices de la tabla `product`
 --
 ALTER TABLE `product`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `idUser` (`idUser`);
+  ADD KEY `FK_9492314205bb204a32e39749607` (`creatorId`);
 
 --
 -- Indices de la tabla `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD UNIQUE KEY `IDX_e12875dfb3b1d92d7d7c5377e2` (`email`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -115,11 +117,11 @@ ALTER TABLE `user`
 -- Filtros para la tabla `comment`
 --
 ALTER TABLE `comment`
-  ADD CONSTRAINT `comment_ibfk_2` FOREIGN KEY (`idProduct`) REFERENCES `product` (`id`),
-  ADD CONSTRAINT `comment_ibfk_3` FOREIGN KEY (`idUser`) REFERENCES `user` (`id`);
+  ADD CONSTRAINT `FK_1e9f24a68bd2dcd6390a4008395` FOREIGN KEY (`productId`) REFERENCES `product` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_c0354a9a009d3bb45a08655ce3b` FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 --
 -- Filtros para la tabla `product`
 --
 ALTER TABLE `product`
-  ADD CONSTRAINT `product_ibfk_1` FOREIGN KEY (`idUser`) REFERENCES `user` (`id`);
+  ADD CONSTRAINT `FK_9492314205bb204a32e39749607` FOREIGN KEY (`creatorId`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
