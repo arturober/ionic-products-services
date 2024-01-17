@@ -13,7 +13,7 @@ export class ProductsController {
   @Get('')
   async getProducts(@Req() req) {
     const products = await this.prodService.getProducts();
-    const basePath = process.env.BASE_PATH + '/' || '';
+    const basePath = process.env.BASE_PATH || '';
 
     const baseUrl = `${req.protocol}://${req.headers.host}/${basePath}`;
     products.forEach(product => {
@@ -25,7 +25,7 @@ export class ProductsController {
   @Get(':id')
   async getProduct(@Param('id') id, @Req() req) {
     const product = await this.prodService.getProduct(id);
-    const basePath = process.env.BASE_PATH + '/' || '';
+    const basePath = process.env.BASE_PATH || '';
 
     const baseUrl = `${req.protocol}://${req.headers.host}/${basePath}`;
     product.imageUrl = baseUrl + product.imageUrl;
@@ -39,7 +39,7 @@ export class ProductsController {
   ) {
     prodDto.creator = req.user.id;
     const product = await this.prodService.insertProduct(prodDto);
-    const basePath = process.env.BASE_PATH + '/' || '';
+    const basePath = process.env.BASE_PATH || '';
 
     const baseUrl = `${req.protocol}://${req.headers.host}/${basePath}`;
     product.imageUrl = baseUrl + product.imageUrl;
@@ -66,7 +66,7 @@ export class ProductsController {
     @Req() req
   ) {
     const comments = await this.prodService.getComments(id);
-    const basePath = process.env.BASE_PATH + '/' || '';
+    const basePath = process.env.BASE_PATH || '';
     const baseUrl = `${req.protocol}://${req.headers.host}/${basePath}`;
     comments.forEach(c => {
       c.user.avatar = baseUrl + c.user.avatar;
@@ -84,7 +84,7 @@ export class ProductsController {
     comment.product = id;
     const c = await this.prodService.insertComment(comment);
 
-    const basePath = process.env.BASE_PATH + '/' || '';
+    const basePath = process.env.BASE_PATH || '';
     const baseUrl = `${req.protocol}://${req.headers.host}/${basePath}`;
 
     c.user.avatar = baseUrl + c.user.avatar;

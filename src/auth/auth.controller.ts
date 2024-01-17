@@ -48,7 +48,7 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt'))
   async getProfile(@Req() req: any) {
     const result = {user: await this.authService.getProfile(req.user.id)};
-    const basePath = process.env.BASE_PATH + '/' || '';
+    const basePath = process.env.BASE_PATH || '';
 
     const baseUrl = `${req.protocol}://${req.headers.host}/${basePath}`;
     result.user.avatar = baseUrl + result.user.avatar;
