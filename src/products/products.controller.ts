@@ -11,14 +11,24 @@ export class ProductsController {
   constructor(private readonly prodService: ProductsService) {}
 
   @Get('')
-  async getProducts() {
+  async getProducts(@Req() req) {
     const products = await this.prodService.getProducts();
+    const basePath = process.env.BASE_PATH + '/' || '';
+
+    const baseUrl = `${req.protocol}://${req.headers.host}/${basePath}`;
+    products.forEach(product => {
+      product.imageUrl = baseUrl + product.imageUrl;
+    });
     return {products};
   }
 
   @Get(':id')
-  async getProduct(@Param('id') id) {
+  async getProduct(@Param('id') id, @Req() req) {
     const product = await this.prodService.getProduct(id);
+    const basePath = process.env.BASE_PATH + '/' || '';
+
+    const baseUrl = `${req.protocol}://${req.headers.host}/${basePath}`;
+    product.imageUrl = baseUrl + product.imageUrl;
     return {product};
   }
 
@@ -28,8 +38,12 @@ export class ProductsController {
     @Body(new ValidationPipe({ transform: true })) prodDto: CreateProductDto,
   ) {
     prodDto.creator = req.user.id;
-    const prod = await this.prodService.insertProduct(prodDto);
-    return {product: prod};
+    const product = await this.prodService.insertProduct(prodDto);
+    const basePath = process.env.BASE_PATH + '/' || '';
+
+    const baseUrl = `${req.protocol}://${req.headers.host}/${basePath}`;
+    product.imageUrl = baseUrl + product.imageUrl;
+    return {product: product};
   }
 
   @Delete(':id')
@@ -49,8 +63,15 @@ export class ProductsController {
   @Get(':id/comments')
   async getComments(
     @Param('id', ParseIntPipe) id: number,
+    @Req() req
   ) {
-    return {comments: await this.prodService.getComments(id)};
+    const comments = await this.prodService.getComments(id);
+    const basePath = process.env.BASE_PATH + '/' || '';
+    const baseUrl = `${req.protocol}://${req.headers.host}/${basePath}`;
+    comments.forEach(c => {
+      c.user.avatar = baseUrl + c.user.avatar;
+    });
+    return { comments }; 
   }
 
   @Post(':id/comments')
@@ -61,6 +82,12 @@ export class ProductsController {
   ) {
     comment.user = req.user.id;
     comment.product = id;
-    return {comment: await this.prodService.insertComment(comment)};
+    const c = await this.prodService.insertComment(comment);
+
+    const basePath = process.env.BASE_PATH + '/' || '';
+    const baseUrl = `${req.protocol}://${req.headers.host}/${basePath}`;
+
+    c.user.avatar = baseUrl + c.user.avatar;
+    return { comment: c }; 
   }
 }

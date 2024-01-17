@@ -51,7 +51,7 @@ export class AuthController {
     const basePath = process.env.BASE_PATH + '/' || '';
 
     const baseUrl = `${req.protocol}://${req.headers.host}/${basePath}`;
-    result.user.avatar = basePath + result.user.avatar;
+    result.user.avatar = baseUrl + result.user.avatar;
     return result;
   }
 
