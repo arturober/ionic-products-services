@@ -11,6 +11,7 @@ import {
   Get,
   UseGuards,
   HttpCode,
+  Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
@@ -27,7 +28,7 @@ export class AuthController {
   async register(@Body() userDto: RegisterUserDto) {
     try {
       const user = await this.authService.registerUser(userDto);
-      return { user };
+      return { email: user.email };
     } catch (error) {
       throw new BadRequestException(error.message);
     }
@@ -41,6 +42,11 @@ export class AuthController {
     } catch (e) {
       throw new UnauthorizedException('Email or password incorrect');
     }
+  }
+
+  @Get('profile')
+  async getProfile(@Req() req: any) {
+    return {user: await this.authService.getProfile(req.user.id)};
   }
 
   @Get('validate')

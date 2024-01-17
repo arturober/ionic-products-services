@@ -53,4 +53,8 @@ export class AuthService {
     async emailExists(email: string): Promise<boolean> {
         return (await this.userRepo.findOne({where: {email}})) ? true : false;
     }
+
+    async getProfile(id: number) {
+        return await this.userRepo.findOneBy({id});
+    }
 }
