@@ -29,6 +29,7 @@ export class ProductsController {
 
     const baseUrl = `${req.protocol}://${req.headers.host}/${basePath}`;
     product.imageUrl = baseUrl + product.imageUrl;
+    product.creator.avatar = baseUrl + product.creator.avatar;
     return {product};
   }
 
