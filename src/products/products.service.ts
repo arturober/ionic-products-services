@@ -45,7 +45,7 @@ export class ProductsService {
   }
 
   async getComments(idProd) {
-    return await this.commentRepo.find({where: {product: idProd}, relations: ['user']});
+    return await this.commentRepo.find({where: {product: {id: idProd}}, relations: ['user']});
   }
 
   async insertComment(commentDto: AddCommentDto) {
