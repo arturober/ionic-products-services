@@ -5,7 +5,7 @@ import * as admin from 'firebase-admin';
 import { useContainer } from 'class-validator';
 
 // tslint:disable-next-line:no-var-requires
-const serviceAccount = require('../firebase/dwec-2017-1507729559860-firebase-adminsdk-pez2j-2c8c522f89');
+const serviceAccount = require('../firebase/firebase_key.json');
 
 async function bootstrap() {
   const basePath = process.env.BASE_PATH || '';
@@ -23,7 +23,6 @@ async function bootstrap() {
 
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: 'https://dwec-2017-1507729559860.firebaseio.com',
   });
 
   await app.listen(parseInt(process.env.PORT, 10) || 3000);
