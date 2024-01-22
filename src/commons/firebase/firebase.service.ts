@@ -15,6 +15,7 @@ export class FirebaseService {
       token,
     };
 
+    console.log(message);
     try {
       const resp = await admin.messaging().send(message);
       return resp;
