@@ -50,7 +50,7 @@ export class ProductsService {
 
   async insertComment(commentDto: AddCommentDto) {
     const result = await this.commentRepo.insert(commentDto);
-    const prod = await this.productRepo.findOne({ where: {id: commentDto.product}, relations: ['user']});
+    const prod = await this.productRepo.findOne({ where: {id: commentDto.product}, relations: ['creator']});
     const user = prod.creator;
 
     if (user.firebaseToken) {
